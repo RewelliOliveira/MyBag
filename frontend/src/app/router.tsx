@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ProtectedRoute, PublicOnlyRoute } from '@/features/auth/components/RouteGuards'
 import { AccountsPage } from '@/pages/AccountsPage'
+import { BudgetsPage } from '@/pages/BudgetsPage'
 import { CategoriesPage } from '@/pages/CategoriesPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoginPage } from '@/pages/LoginPage'
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
           { index: true, element: <DashboardPage /> },
           { path: 'contas', element: <AccountsPage /> },
           { path: 'transacoes', element: <TransactionsPage /> },
+          { path: 'orcamentos', element: <BudgetsPage /> },
           { path: 'categorias', element: <CategoriesPage /> },
         ],
       },
