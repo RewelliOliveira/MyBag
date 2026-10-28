@@ -1,5 +1,3 @@
-import { jwtDecode } from 'jwt-decode'
-
 const TOKEN_KEY = 'mybag:token'
 const listeners = new Set<() => void>()
 
@@ -22,14 +20,7 @@ export function clearToken() {
 }
 
 export function isTokenValid(token: string | null) {
-  if (!token) return false
-
-  try {
-    const { exp } = jwtDecode(token)
-    return exp === undefined || exp * 1000 > Date.now()
-  } catch {
-    return false
-  }
+  return Boolean(token)
 }
 
 export function subscribeToToken(listener: () => void) {

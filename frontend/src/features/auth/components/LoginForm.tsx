@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/features/auth/components/PasswordInput'
 import { useLogin } from '@/features/auth/hooks/use-auth'
 import { loginSchema, type LoginInput } from '@/features/auth/schemas'
+import { DEMO_CREDENTIALS } from '@/mock/seed'
 
 interface LocationState {
   from?: string
@@ -24,7 +25,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', senha: '' },
+    defaultValues: DEMO_CREDENTIALS,
   })
 
   return (

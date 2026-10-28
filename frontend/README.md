@@ -7,7 +7,7 @@ Aplicação web de finanças pessoais: contas, transações (únicas, fixas e pa
 - React 19 + TypeScript + Vite
 - Tailwind CSS v4 + shadcn/ui (Radix)
 - React Router (rotas com carregamento sob demanda)
-- TanStack Query + Axios
+- TanStack Query
 - React Hook Form + Zod
 - Motion para animações
 - Recharts (via shadcn Chart)
@@ -15,7 +15,6 @@ Aplicação web de finanças pessoais: contas, transações (únicas, fixas e pa
 ## Primeiros passos
 
 ```bash
-cp .env.example .env   # ajuste VITE_API_BASE_URL para o backend
 npm install
 npm run dev
 ```
@@ -26,6 +25,12 @@ npm run dev
 | `npm run build` | Checagem de tipos e build de produção |
 | `npm run lint` | ESLint |
 | `npm run format` | Prettier (com ordenação de classes Tailwind) |
+
+## Dados mockados
+
+Ainda não há backend hospedado, então os serviços em `src/features/*/services` leem e gravam em um banco simulado em `src/mock`, com latência artificial. Os dados são gerados relativos à data atual (últimos 6 meses) e ficam salvos no `localStorage` (`mybag:mock-db:v1`); apague essa chave para restaurar a carga inicial.
+
+Login de demonstração: `demo@mybag.com` / `123456` (já preenchido na tela de login).
 
 ## Estrutura
 
@@ -41,7 +46,8 @@ src/
 │                 services/ e schemas.ts
 ├── pages/        páginas das rotas, compostas a partir das features
 ├── hooks/        hooks globais
-├── lib/          cliente HTTP, query client, formatação e utilitários
+├── lib/          query client, erros, formatação e utilitários
+├── mock/         banco simulado: carga inicial, recorrências e helpers de requisição
 └── types/        modelos da API
 ```
 

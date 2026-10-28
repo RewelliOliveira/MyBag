@@ -1,6 +1,15 @@
-import { apiClient } from '@/lib/api-client'
-import { toApiDate } from '@/lib/format'
-import type { Account, AccountType, Bank, Period } from '@/types/models'
+import { ApiError } from '@/lib/api-error'
+import { nextId, type MockDatabase } from '@/mock/db'
+import { mockRequest } from '@/mock/request'
+import {
+  balanceAt,
+  findAccount,
+  periodEnd,
+  roundMoney,
+  syncUntil,
+  toAccount,
+} from '@/mock/selectors'
+import type { Period } from '@/types/models'
 
 export interface AccountPayload {
   descricao: string
@@ -13,48 +22,74 @@ export interface AccountUpdatePayload extends AccountPayload {
   data: Date
 }
 
-const periodParams = ({ month, year }: Period) => ({ params: { mes: month, ano: year } })
-
-function toRequestBody({ descricao, saldo, bancoId, tipoContaId }: AccountPayload) {
-  return { descricao, saldo, id_banco: bancoId, id_tipo_conta: tipoContaId }
-}
-
-export async function getAccounts(period: Period) {
-  const { data } = await apiClient.get<Account[]>('/contas', periodParams(period))
-  return data
-}
-
-export async function getTotalBalance(period: Period) {
-  const { data } = await apiClient.get<{ saldo: number }>(
-    '/contas/saldoTotal',
-    periodParams(period),
+function assertUniqueDescription(db: MockDatabase, descricao: string, ignoreId?: number) {
+  const taken = db.accounts.some(
+    (account) =>
+      account.id !== ignoreId && account.descricao.toLowerCase() === descricao.trim().toLowerCase(),
   )
-  return data.saldo
+  if (taken) throw new ApiError(409, 'Já existe uma conta com essa descrição.')
 }
 
-export async function createAccount(payload: AccountPayload) {
-  const { data } = await apiClient.post<Account>('/contas', toRequestBody(payload))
-  return data
-}
-
-export async function updateAccount(id: number, payload: AccountUpdatePayload) {
-  const { data } = await apiClient.put<Account>(`/contas/${id}`, {
-    ...toRequestBody(payload),
-    data: toApiDate(payload.data),
+export function getAccounts(period: Period) {
+  return mockRequest((db) => {
+    const date = periodEnd(period)
+    syncUntil(db, date)
+    return db.accounts.map((account) => toAccount(db, account, date))
   })
-  return data
 }
 
-export async function deleteAccount(id: number) {
-  await apiClient.delete(`/contas/${id}`)
+export function getTotalBalance(period: Period) {
+  return mockRequest((db) => {
+    const date = periodEnd(period)
+    syncUntil(db, date)
+    return roundMoney(db.accounts.reduce((sum, account) => sum + balanceAt(db, account, date), 0))
+  })
 }
 
-export async function getBanks() {
-  const { data } = await apiClient.get<Bank[]>('/bancos')
-  return data
+export function createAccount({ descricao, saldo, bancoId, tipoContaId }: AccountPayload) {
+  return mockRequest((db) => {
+    assertUniqueDescription(db, descricao)
+    const account = {
+      id: nextId(db),
+      descricao: descricao.trim(),
+      saldoInicial: saldo,
+      bancoId,
+      tipoContaId,
+    }
+    db.accounts.push(account)
+    return toAccount(db, account, new Date())
+  })
 }
 
-export async function getAccountTypes() {
-  const { data } = await apiClient.get<AccountType[]>('/tipoConta')
-  return data
+export function updateAccount(
+  id: number,
+  { descricao, saldo, bancoId, tipoContaId, data }: AccountUpdatePayload,
+) {
+  return mockRequest((db) => {
+    const account = findAccount(db, id)
+    assertUniqueDescription(db, descricao, id)
+
+    account.descricao = descricao.trim()
+    account.bancoId = bancoId
+    account.tipoContaId = tipoContaId
+    account.saldoInicial = roundMoney(account.saldoInicial + saldo - balanceAt(db, account, data))
+    return toAccount(db, account, data)
+  })
+}
+
+export function deleteAccount(id: number) {
+  return mockRequest((db) => {
+    findAccount(db, id)
+    db.accounts = db.accounts.filter((account) => account.id !== id)
+    db.transactions = db.transactions.filter(({ contaId }) => contaId !== id)
+    db.recurrences = db.recurrences.filter(({ contaId }) => contaId !== id)
+  })
+}
+
+export function getBanks() {
+  return mockRequest((db) => db.banks)
+}
+
+export function getAccountTypes() {
+  return mockRequest((db) => db.accountTypes)
 }

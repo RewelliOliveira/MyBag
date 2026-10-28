@@ -1,5 +1,8 @@
-import { apiClient } from '@/lib/api-client'
-import type { Category, TransactionType } from '@/types/models'
+import { ApiError } from '@/lib/api-error'
+import { nextId, type MockDatabase } from '@/mock/db'
+import { mockRequest } from '@/mock/request'
+import { findCategory, toCategory } from '@/mock/selectors'
+import type { TransactionType } from '@/types/models'
 
 export interface CategoryPayload {
   nome: string
@@ -7,32 +10,48 @@ export interface CategoryPayload {
   cor: string
 }
 
-const endpointByType: Record<TransactionType, string> = {
-  RECEITA: '/categorias/receitas',
-  DESPESA: '/categorias/despesas',
+function assertUniqueName(db: MockDatabase, { nome, tipo }: CategoryPayload, ignoreId?: number) {
+  const taken = db.categories.some(
+    (category) =>
+      category.id !== ignoreId &&
+      category.tipo === tipo &&
+      category.nome.toLowerCase() === nome.trim().toLowerCase(),
+  )
+  if (taken) throw new ApiError(409, 'Já existe uma categoria com esse nome.')
 }
 
-export async function getCategories(type?: TransactionType) {
-  const { data } = await apiClient.get<Category[]>(type ? endpointByType[type] : '/categorias')
-  return data
+export function getCategories(type?: TransactionType) {
+  return mockRequest((db) =>
+    db.categories.filter(({ ativa, tipo }) => ativa && (!type || tipo === type)).map(toCategory),
+  )
 }
 
-export async function getArchivedCategories() {
-  const { data } = await apiClient.get<Category[]>('/categorias/arquivadas')
-  return data
+export function getArchivedCategories() {
+  return mockRequest((db) => db.categories.filter(({ ativa }) => !ativa).map(toCategory))
 }
 
-export async function createCategory(payload: CategoryPayload) {
-  const { data } = await apiClient.post<Category>('/categorias', payload)
-  return data
+export function createCategory(payload: CategoryPayload) {
+  return mockRequest((db) => {
+    assertUniqueName(db, payload)
+    const category = { id: nextId(db), ...payload, nome: payload.nome.trim(), ativa: true }
+    db.categories.push(category)
+    return toCategory(category)
+  })
 }
 
-export async function updateCategory(id: number, payload: CategoryPayload) {
-  const { data } = await apiClient.put<Category>(`/categorias/${id}`, payload)
-  return data
+export function updateCategory(id: number, payload: CategoryPayload) {
+  return mockRequest((db) => {
+    const category = findCategory(db, id)
+    assertUniqueName(db, payload, id)
+    Object.assign(category, payload, { nome: payload.nome.trim() })
+    return toCategory(category)
+  })
 }
 
-export async function setCategoryActive(id: number, ativa: boolean) {
-  const { data } = await apiClient.patch<Category>(`/categorias/arquivadas/${id}`, { ativa })
-  return data
+export function setCategoryActive(id: number, ativa: boolean) {
+  return mockRequest((db) => {
+    const category = findCategory(db, id)
+    category.ativa = ativa
+    return toCategory(category)
+  })
 }
