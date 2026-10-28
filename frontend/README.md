@@ -1,6 +1,6 @@
 # MyBag — Frontend
 
-Aplicação web de finanças pessoais: contas, transações (únicas, fixas e parceladas), categorias, orçamentos mensais e relatórios.
+Aplicação web de finanças pessoais: contas, transações (únicas, fixas e parceladas), categorias pré-definidas com ícones, orçamentos mensais e relatórios.
 
 ## Stack
 

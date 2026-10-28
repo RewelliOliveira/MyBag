@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Progress } from '@/components/ui/progress'
 import { getBudgetStatus, type BudgetStatus } from '@/features/budgets/budget-status'
-import { CategoryDot } from '@/features/categories/components/CategoryDot'
+import { CategoryIcon } from '@/features/categories/components/CategoryIcon'
 import { formatCurrency, formatPercent } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import type { Budget } from '@/types/models'
@@ -32,7 +32,7 @@ export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
   return (
     <article className="rounded-2xl border bg-card p-5">
       <header className="flex items-center gap-3">
-        <CategoryDot color={budget.categoriaDTO.cor} />
+        <CategoryIcon category={budget.categoriaDTO} />
         <h3 className="flex-1 truncate font-sans text-base font-semibold">
           {budget.categoriaDTO.nome}
         </h3>

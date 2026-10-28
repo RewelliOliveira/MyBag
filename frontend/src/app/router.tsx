@@ -44,10 +44,6 @@ export const router = createBrowserRouter([
                 lazy: lazyPage(() => import('@/pages/BudgetsPage'), 'BudgetsPage'),
               },
               {
-                path: 'categorias',
-                lazy: lazyPage(() => import('@/pages/CategoriesPage'), 'CategoriesPage'),
-              },
-              {
                 path: 'relatorios',
                 lazy: lazyPage(() => import('@/pages/ReportsPage'), 'ReportsPage'),
               },

@@ -14,9 +14,7 @@ export interface MockUser extends User {
   senha: string
 }
 
-export interface MockCategory extends Category {
-  ativa: boolean
-}
+export type MockCategory = Category
 
 export interface MockAccount {
   id: number
@@ -74,7 +72,7 @@ export interface MockDatabase {
   budgets: MockBudget[]
 }
 
-const STORAGE_KEY = 'mybag:mock-db:v1'
+const STORAGE_KEY = 'mybag:mock-db:v2'
 
 let database: MockDatabase | null = null
 

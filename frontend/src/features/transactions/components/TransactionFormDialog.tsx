@@ -27,7 +27,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useAccounts } from '@/features/accounts/hooks/use-accounts'
-import { CategoryDot } from '@/features/categories/components/CategoryDot'
+import { CategoryPicker } from '@/features/categories/components/CategoryPicker'
 import { useCategories } from '@/features/categories/hooks/use-categories'
 import {
   useCreateTransaction,
@@ -172,38 +172,25 @@ export function TransactionFormDialog({
               <FieldError errors={[errors.descricao]} />
             </Field>
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field data-invalid={!!errors.categoriaId}>
-                <FieldLabel htmlFor="categoriaId">Categoria</FieldLabel>
-                <Controller
-                  control={control}
-                  name="categoriaId"
-                  render={({ field }) => (
-                    <Select
-                      value={field.value?.toString() ?? ''}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                    >
-                      <SelectTrigger
-                        id="categoriaId"
-                        className="w-full"
-                        aria-invalid={!!errors.categoriaId}
-                      >
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id.toString()}>
-                            <CategoryDot color={category.cor} />
-                            {category.nome}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <FieldError errors={[errors.categoriaId]} />
-              </Field>
+            <Field data-invalid={!!errors.categoriaId}>
+              <FieldLabel htmlFor="categoriaId">Categoria</FieldLabel>
+              <Controller
+                control={control}
+                name="categoriaId"
+                render={({ field }) => (
+                  <CategoryPicker
+                    id="categoriaId"
+                    categories={categories}
+                    value={field.value}
+                    onChange={field.onChange}
+                    invalid={!!errors.categoriaId}
+                  />
+                )}
+              />
+              <FieldError errors={[errors.categoriaId]} />
+            </Field>
 
+            <div className="grid gap-4 sm:grid-cols-2">
               <Field data-invalid={!!errors.contaId}>
                 <FieldLabel htmlFor="contaId">Conta</FieldLabel>
                 <Controller
@@ -233,26 +220,25 @@ export function TransactionFormDialog({
                 />
                 <FieldError errors={[errors.contaId]} />
               </Field>
+              <Field data-invalid={!!errors.data}>
+                <FieldLabel htmlFor="data">
+                  {recorrencia === 'NORMAL' ? 'Data' : 'Primeira ocorrência'}
+                </FieldLabel>
+                <Controller
+                  control={control}
+                  name="data"
+                  render={({ field }) => (
+                    <DatePicker
+                      id="data"
+                      value={field.value}
+                      onChange={(date) => date && field.onChange(date)}
+                      invalid={!!errors.data}
+                    />
+                  )}
+                />
+                <FieldError errors={[errors.data]} />
+              </Field>
             </div>
-
-            <Field data-invalid={!!errors.data}>
-              <FieldLabel htmlFor="data">
-                {recorrencia === 'NORMAL' ? 'Data' : 'Primeira ocorrência'}
-              </FieldLabel>
-              <Controller
-                control={control}
-                name="data"
-                render={({ field }) => (
-                  <DatePicker
-                    id="data"
-                    value={field.value}
-                    onChange={(date) => date && field.onChange(date)}
-                    invalid={!!errors.data}
-                  />
-                )}
-              />
-              <FieldError errors={[errors.data]} />
-            </Field>
 
             {!isEditing && (
               <Field>

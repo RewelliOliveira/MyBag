@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { CategoryDot } from '@/features/categories/components/CategoryDot'
+import { CategoryIcon } from '@/features/categories/components/CategoryIcon'
 import { originLabels } from '@/features/transactions/recurrence'
 import { formatCurrency } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -25,7 +25,7 @@ export function TransactionRow({ transaction, onEdit, onDelete }: TransactionRow
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 md:px-5">
-      <CategoryDot color={transaction.categoria.cor} className="size-2.5" />
+      <CategoryIcon category={transaction.categoria} />
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 truncate font-medium">
           <span className="truncate">{transaction.descricao}</span>

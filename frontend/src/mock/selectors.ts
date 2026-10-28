@@ -40,8 +40,8 @@ export function findCategory(db: MockDatabase, id: number) {
   return db.categories.find((category) => category.id === id) ?? notFound('Categoria')
 }
 
-export function toCategory({ id, nome, tipo, cor }: MockCategory): Category {
-  return { id, nome, tipo, cor }
+export function toCategory({ id, nome, tipo, icone, cor }: MockCategory): Category {
+  return { id, nome, tipo, icone, cor }
 }
 
 export function toAccount(db: MockDatabase, account: MockAccount, date: Date): Account {

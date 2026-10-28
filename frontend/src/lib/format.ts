@@ -59,10 +59,6 @@ export function formatShortMonth(month: number, year: number) {
   return format(new Date(year, month - 1, 1), 'MMM/yy', { locale: ptBR })
 }
 
-export function normalizeHexColor(color: string) {
-  return color.startsWith('#') ? color : `#${color}`
-}
-
 export function getInitials(name: string | undefined) {
   const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
   const first = parts.at(0)?.[0] ?? ''

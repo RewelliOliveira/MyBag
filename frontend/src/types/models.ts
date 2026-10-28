@@ -34,6 +34,7 @@ export interface Category {
   id: number
   nome: string
   tipo: TransactionType
+  icone: string
   cor: string
 }
 

@@ -1,10 +1,10 @@
 import { Cell, Pie, PieChart } from 'recharts'
 import { ChartContainer, ChartTooltip, type ChartConfig } from '@/components/ui/chart'
-import { CategoryDot } from '@/features/categories/components/CategoryDot'
+import { CategoryIcon } from '@/features/categories/components/CategoryIcon'
 import { ChartCard } from '@/features/reports/components/ChartCard'
 import { CurrencyTooltip } from '@/features/reports/components/CurrencyTooltip'
 import { useCategoryTotals } from '@/features/reports/hooks/use-reports'
-import { formatCurrency, formatPercent, normalizeHexColor } from '@/lib/format'
+import { formatCurrency, formatPercent } from '@/lib/format'
 import { transactionTypePluralLabels } from '@/lib/transaction-types'
 import type { Period, TransactionType } from '@/types/models'
 
@@ -19,7 +19,7 @@ export function CategoryBreakdownChart({ type, period }: CategoryBreakdownChartP
   const sorted = [...data].sort((a, b) => b.valorTotal - a.valorTotal)
 
   const config = Object.fromEntries(
-    sorted.map((item) => [item.nome, { label: item.nome, color: normalizeHexColor(item.cor) }]),
+    sorted.map((item) => [item.nome, { label: item.nome, color: item.cor }]),
   ) satisfies ChartConfig
 
   return (
@@ -47,7 +47,7 @@ export function CategoryBreakdownChart({ type, period }: CategoryBreakdownChartP
               strokeWidth={2}
             >
               {sorted.map((item) => (
-                <Cell key={item.id} fill={normalizeHexColor(item.cor)} />
+                <Cell key={item.id} fill={item.cor} />
               ))}
             </Pie>
           </PieChart>
@@ -56,7 +56,7 @@ export function CategoryBreakdownChart({ type, period }: CategoryBreakdownChartP
         <ul className="space-y-3 text-sm">
           {sorted.map((item) => (
             <li key={item.id} className="flex items-center gap-2">
-              <CategoryDot color={item.cor} className="size-2.5" />
+              <CategoryIcon category={item} className="size-7 [&_svg]:size-3.5" />
               <span className="flex-1 truncate">{item.nome}</span>
               <span className="money font-medium">{formatCurrency(item.valorTotal)}</span>
               <span className="w-12 text-right text-muted-foreground tabular-nums">

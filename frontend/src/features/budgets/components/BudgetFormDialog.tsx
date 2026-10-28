@@ -13,16 +13,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { useCreateBudget, useUpdateBudget } from '@/features/budgets/hooks/use-budgets'
 import { budgetSchema, type BudgetFormValues } from '@/features/budgets/schemas'
-import { CategoryDot } from '@/features/categories/components/CategoryDot'
+import { CategoryPicker } from '@/features/categories/components/CategoryPicker'
 import { useCategories } from '@/features/categories/hooks/use-categories'
 import { formatMonthYear } from '@/lib/format'
 import type { Budget, Period } from '@/types/models'
@@ -56,8 +49,8 @@ export function BudgetFormDialog({
   const updateBudget = useUpdateBudget()
   const isPending = createBudget.isPending || updateBudget.isPending
 
-  const availableCategories = categories.filter(
-    (category) => category.id === budget?.categoriaDTO.id || !usedCategoryIds.includes(category.id),
+  const availableCategories = categories.filter((category) =>
+    budget ? category.id === budget.categoriaDTO.id : !usedCategoryIds.includes(category.id),
   )
 
   const {
@@ -99,27 +92,13 @@ export function BudgetFormDialog({
                 control={control}
                 name="categoriaId"
                 render={({ field }) => (
-                  <Select
-                    value={field.value?.toString() ?? ''}
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    disabled={isEditing}
-                  >
-                    <SelectTrigger
-                      id="categoriaId"
-                      className="w-full"
-                      aria-invalid={!!errors.categoriaId}
-                    >
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableCategories.map((category) => (
-                        <SelectItem key={category.id} value={category.id.toString()}>
-                          <CategoryDot color={category.cor} />
-                          {category.nome}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <CategoryPicker
+                    id="categoriaId"
+                    categories={availableCategories}
+                    value={field.value}
+                    onChange={field.onChange}
+                    invalid={!!errors.categoriaId}
+                  />
                 )}
               />
               <FieldError errors={[errors.categoriaId]} />

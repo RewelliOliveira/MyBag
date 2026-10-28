@@ -14,6 +14,7 @@ import type { Period, TransactionType } from '@/types/models'
 export interface CategoryTotal {
   id: number
   nome: string
+  icone: string
   cor: string
   valorTotal: number
   percentual: number
@@ -65,10 +66,11 @@ export function getCategoryTotals(type: TransactionType, period: Period) {
 
     return [...totals.entries()]
       .map(([id, total]): CategoryTotal => {
-        const { nome, cor } = findCategory(db, id)
+        const { nome, icone, cor } = findCategory(db, id)
         return {
           id,
           nome,
+          icone,
           cor,
           valorTotal: roundMoney(total),
           percentual: grandTotal ? roundMoney((total / grandTotal) * 100) : 0,

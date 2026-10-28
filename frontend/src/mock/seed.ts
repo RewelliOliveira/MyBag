@@ -39,18 +39,45 @@ const accountTypes = [
   { id: 5, tipoConta: 'OUTRO' as const },
 ]
 
+const income = (id: number, nome: string, icone: string, cor: string) => ({
+  id,
+  nome,
+  tipo: 'RECEITA' as const,
+  icone,
+  cor,
+})
+
+const expense = (id: number, nome: string, icone: string, cor: string) => ({
+  id,
+  nome,
+  tipo: 'DESPESA' as const,
+  icone,
+  cor,
+})
+
 const categories = [
-  { id: 1, nome: 'Salário', tipo: 'RECEITA' as const, cor: '#2A9D8F', ativa: true },
-  { id: 2, nome: 'Freelance', tipo: 'RECEITA' as const, cor: '#3399FF', ativa: true },
-  { id: 3, nome: 'Rendimentos', tipo: 'RECEITA' as const, cor: '#33FF57', ativa: true },
-  { id: 4, nome: 'Alimentação', tipo: 'DESPESA' as const, cor: '#FF5733', ativa: true },
-  { id: 5, nome: 'Moradia', tipo: 'DESPESA' as const, cor: '#9B59B6', ativa: true },
-  { id: 6, nome: 'Transporte', tipo: 'DESPESA' as const, cor: '#F39C12', ativa: true },
-  { id: 7, nome: 'Lazer', tipo: 'DESPESA' as const, cor: '#FF33A8', ativa: true },
-  { id: 8, nome: 'Saúde', tipo: 'DESPESA' as const, cor: '#E63946', ativa: true },
-  { id: 9, nome: 'Compras', tipo: 'DESPESA' as const, cor: '#00C8FF', ativa: true },
-  { id: 10, nome: 'Educação', tipo: 'DESPESA' as const, cor: '#FFBF00', ativa: true },
-  { id: 11, nome: 'Academia', tipo: 'DESPESA' as const, cor: '#2A9D8F', ativa: false },
+  income(1, 'Salário', 'briefcase', '#2F9E44'),
+  income(2, 'Freelance', 'laptop', '#1C7ED6'),
+  income(3, 'Rendimentos', 'trending-up', '#0CA678'),
+  income(4, 'Vendas', 'tag', '#7048E8'),
+  income(5, 'Reembolsos', 'undo', '#1098AD'),
+  income(6, 'Outras receitas', 'circle-plus', '#868E96'),
+  expense(10, 'Mercado', 'shopping-cart', '#37B24D'),
+  expense(11, 'Restaurantes', 'utensils', '#F76707'),
+  expense(12, 'Moradia', 'house', '#7950F2'),
+  expense(13, 'Contas da casa', 'zap', '#F59F00'),
+  expense(14, 'Transporte', 'car', '#1C7ED6'),
+  expense(15, 'Saúde', 'heart-pulse', '#E03131'),
+  expense(16, 'Educação', 'graduation-cap', '#4263EB'),
+  expense(17, 'Lazer', 'popcorn', '#D6336C'),
+  expense(18, 'Compras', 'shopping-bag', '#AE3EC9'),
+  expense(19, 'Assinaturas', 'tv', '#0C8599'),
+  expense(20, 'Viagens', 'plane', '#15AABF'),
+  expense(21, 'Cuidados pessoais', 'sparkles', '#F06595'),
+  expense(22, 'Pets', 'paw-print', '#E67700'),
+  expense(23, 'Presentes', 'gift', '#C2255C'),
+  expense(24, 'Impostos e taxas', 'landmark', '#5C7CFA'),
+  expense(25, 'Outras despesas', 'circle-ellipsis', '#868E96'),
 ]
 
 const accounts = [
@@ -69,20 +96,20 @@ interface VariableExpense {
 }
 
 const variableExpenses: VariableExpense[] = [
-  { descricao: 'Supermercado', categoriaId: 4, contaId: 1, min: 180, max: 420, perMonth: 3 },
-  { descricao: 'Restaurante', categoriaId: 4, contaId: 1, min: 45, max: 160, perMonth: 3 },
-  { descricao: 'Combustível', categoriaId: 6, contaId: 1, min: 120, max: 260, perMonth: 2 },
+  { descricao: 'Supermercado', categoriaId: 10, contaId: 1, min: 180, max: 420, perMonth: 3 },
+  { descricao: 'Restaurante', categoriaId: 11, contaId: 1, min: 45, max: 160, perMonth: 3 },
+  { descricao: 'Combustível', categoriaId: 14, contaId: 1, min: 120, max: 260, perMonth: 2 },
   {
     descricao: 'Aplicativo de transporte',
-    categoriaId: 6,
+    categoriaId: 14,
     contaId: 1,
     min: 18,
     max: 55,
     perMonth: 3,
   },
-  { descricao: 'Cinema', categoriaId: 7, contaId: 1, min: 40, max: 90, perMonth: 1 },
-  { descricao: 'Farmácia', categoriaId: 8, contaId: 1, min: 30, max: 150, perMonth: 1 },
-  { descricao: 'Roupas', categoriaId: 9, contaId: 1, min: 90, max: 350, perMonth: 1 },
+  { descricao: 'Cinema', categoriaId: 17, contaId: 1, min: 40, max: 90, perMonth: 1 },
+  { descricao: 'Farmácia', categoriaId: 15, contaId: 1, min: 30, max: 150, perMonth: 1 },
+  { descricao: 'Roupas', categoriaId: 18, contaId: 1, min: 90, max: 350, perMonth: 1 },
 ]
 
 function createRandom(seed: number) {
@@ -190,7 +217,7 @@ export function createSeed(): MockDatabase {
       valor: 1850,
       tipo: 'DESPESA',
       descricao: 'Aluguel',
-      categoriaId: 5,
+      categoriaId: 12,
       contaId: 3,
       dataCadastro: toApiDate(setDate(firstMonth, 10)),
     }),
@@ -200,7 +227,7 @@ export function createSeed(): MockDatabase {
       valor: 119.9,
       tipo: 'DESPESA',
       descricao: 'Internet',
-      categoriaId: 5,
+      categoriaId: 13,
       contaId: 1,
       dataCadastro: toApiDate(setDate(firstMonth, 12)),
     }),
@@ -210,7 +237,7 @@ export function createSeed(): MockDatabase {
       valor: 39.9,
       tipo: 'DESPESA',
       descricao: 'Streaming',
-      categoriaId: 7,
+      categoriaId: 19,
       contaId: 1,
       dataCadastro: toApiDate(setDate(firstMonth, 18)),
     }),
@@ -220,7 +247,7 @@ export function createSeed(): MockDatabase {
       valor: 4800,
       tipo: 'DESPESA',
       descricao: 'Notebook',
-      categoriaId: 9,
+      categoriaId: 18,
       contaId: 1,
       dataCadastro: toApiDate(installmentStart),
       dataFinal: toApiDate(addMonths(installmentStart, 9)),
@@ -232,7 +259,7 @@ export function createSeed(): MockDatabase {
       valor: 1200,
       tipo: 'DESPESA',
       descricao: 'Curso de inglês',
-      categoriaId: 10,
+      categoriaId: 16,
       contaId: 1,
       dataCadastro: toApiDate(setDate(subMonths(today, 5), 8)),
       dataFinal: toApiDate(setDate(today, 8)),
@@ -244,10 +271,11 @@ export function createSeed(): MockDatabase {
     const date = subMonths(today, offset)
     const period = { mes: date.getMonth() + 1, ano: date.getFullYear() }
     return [
-      { id: nextId(), categoriaId: 4, valorEstimado: 1500, ...period },
-      { id: nextId(), categoriaId: 6, valorEstimado: 500, ...period },
-      { id: nextId(), categoriaId: 7, valorEstimado: 150, ...period },
-      { id: nextId(), categoriaId: 9, valorEstimado: 900, ...period },
+      { id: nextId(), categoriaId: 10, valorEstimado: 1200, ...period },
+      { id: nextId(), categoriaId: 11, valorEstimado: 400, ...period },
+      { id: nextId(), categoriaId: 14, valorEstimado: 500, ...period },
+      { id: nextId(), categoriaId: 17, valorEstimado: 150, ...period },
+      { id: nextId(), categoriaId: 18, valorEstimado: 900, ...period },
     ]
   })
 
