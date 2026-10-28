@@ -3,7 +3,6 @@ import {
   createAccount,
   deleteAccount,
   getAccounts,
-  getAccountSummaries,
   getAccountTypes,
   getBanks,
   getTotalBalance,
@@ -19,13 +18,6 @@ export function useAccounts(period: Period) {
   return useQuery({
     queryKey: ['accounts', period],
     queryFn: () => getAccounts(period),
-  })
-}
-
-export function useAccountSummaries(period: Period) {
-  return useQuery({
-    queryKey: ['accounts', 'summaries', period],
-    queryFn: () => getAccountSummaries(period),
   })
 }
 

@@ -51,6 +51,10 @@ export function formatMonthYear(month: number, year: number) {
   return capitalize(format(new Date(year, month - 1, 1), "MMMM 'de' yyyy", { locale: ptBR }))
 }
 
+export function formatMonthName(month: number, year: number) {
+  return format(new Date(year, month - 1, 1), 'MMMM', { locale: ptBR })
+}
+
 export function formatShortMonth(month: number, year: number) {
   return format(new Date(year, month - 1, 1), 'MMM/yy', { locale: ptBR })
 }

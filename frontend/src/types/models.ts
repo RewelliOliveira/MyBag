@@ -30,12 +30,6 @@ export interface Account {
   tipo_conta: AccountType
 }
 
-export interface AccountSummary {
-  iconeUrl: string
-  nomeBanco: string
-  saldo: number
-}
-
 export interface Category {
   id: number
   nome: string

@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api-client'
 import { toApiDate } from '@/lib/format'
-import type { Account, AccountSummary, AccountType, Bank, Period } from '@/types/models'
+import type { Account, AccountType, Bank, Period } from '@/types/models'
 
 export interface AccountPayload {
   descricao: string
@@ -21,11 +21,6 @@ function toRequestBody({ descricao, saldo, bancoId, tipoContaId }: AccountPayloa
 
 export async function getAccounts(period: Period) {
   const { data } = await apiClient.get<Account[]>('/contas', periodParams(period))
-  return data
-}
-
-export async function getAccountSummaries(period: Period) {
-  const { data } = await apiClient.get<AccountSummary[]>('/contas/min', periodParams(period))
   return data
 }
 
