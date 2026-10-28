@@ -7,6 +7,7 @@ import { CategoriesPage } from '@/pages/CategoriesPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { ProfilePage } from '@/pages/ProfilePage'
 import { ReportsPage } from '@/pages/ReportsPage'
 import { SignupPage } from '@/pages/SignupPage'
 import { TransactionsPage } from '@/pages/TransactionsPage'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
           { path: 'orcamentos', element: <BudgetsPage /> },
           { path: 'categorias', element: <CategoriesPage /> },
           { path: 'relatorios', element: <ReportsPage /> },
+          { path: 'perfil', element: <ProfilePage /> },
         ],
       },
     ],

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLogout } from '@/features/auth/hooks/use-auth'
-import { useCurrentUser } from '@/features/profile/hooks/use-current-user'
+import { useCurrentUser } from '@/features/profile/hooks/use-profile'
 import { getInitials } from '@/lib/format'
 
 export function UserMenu() {
