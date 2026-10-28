@@ -28,11 +28,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useAccounts } from '@/features/accounts/hooks/use-accounts'
 import { CategoryPicker } from '@/features/categories/components/CategoryPicker'
+import { BudgetImpactHint } from '@/features/transactions/components/BudgetImpactHint'
 import { useCategories } from '@/features/categories/hooks/use-categories'
 import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '@/features/transactions/hooks/use-transactions'
+import { getLastAccountId, saveLastAccountId } from '@/features/transactions/last-account'
 import { periodicityLabels, recurrenceOptions } from '@/features/transactions/recurrence'
 import { transactionSchema, type TransactionFormValues } from '@/features/transactions/schemas'
 import type { Recurrence } from '@/features/transactions/services/transactions-service'
@@ -83,6 +85,7 @@ export function TransactionFormDialog({
     register,
     handleSubmit,
     reset,
+    getValues,
     resetField,
     setValue,
     formState: { errors },
@@ -91,9 +94,9 @@ export function TransactionFormDialog({
     defaultValues: toFormValues(transaction, defaultType),
   })
 
-  const [tipo, recorrencia, valor, qtdParcelas] = useWatch({
+  const [tipo, recorrencia, valor, qtdParcelas, categoriaId, data] = useWatch({
     control,
-    name: ['tipo', 'recorrencia', 'valor', 'qtdParcelas'],
+    name: ['tipo', 'recorrencia', 'valor', 'qtdParcelas', 'categoriaId', 'data'],
   })
 
   const { data: categories = [] } = useCategories(tipo)
@@ -102,6 +105,16 @@ export function TransactionFormDialog({
   useEffect(() => {
     if (open) reset(toFormValues(transaction, defaultType))
   }, [open, transaction, defaultType, reset])
+
+  useEffect(() => {
+    if (!open || transaction || accounts.length === 0) return
+    const isValid = (id?: number) => accounts.some((account) => account.id === id)
+    if (isValid(getValues('contaId'))) return
+
+    const lastAccountId = getLastAccountId()
+    if (isValid(lastAccountId)) setValue('contaId', lastAccountId!)
+    else if (accounts.length === 1) setValue('contaId', accounts[0].id)
+  }, [open, transaction, accounts, getValues, setValue])
 
   const changeType = (next: TransactionType) => {
     setValue('tipo', next)
@@ -118,11 +131,13 @@ export function TransactionFormDialog({
     if (transaction) {
       updateTransaction.mutate({ id: transaction.id, ...values }, options)
     } else {
+      saveLastAccountId(values.contaId)
       createTransaction.mutate({ ...values, recorrencia, periodicidade, qtdParcelas }, options)
     }
   }
 
   const installmentValue = qtdParcelas && qtdParcelas >= 2 ? (valor ?? 0) / qtdParcelas : 0
+  const monthlyImpact = recorrencia === 'PARCELADA' ? installmentValue : (valor ?? 0)
   const typeLabel = transactionTypeLabels[tipo ?? 'DESPESA'].toLowerCase()
 
   return (
@@ -188,6 +203,14 @@ export function TransactionFormDialog({
                 )}
               />
               <FieldError errors={[errors.categoriaId]} />
+              {tipo === 'DESPESA' && (
+                <BudgetImpactHint
+                  categoryId={categoriaId}
+                  date={data}
+                  amount={monthlyImpact}
+                  editing={transaction}
+                />
+              )}
             </Field>
 
             <div className="grid gap-4 sm:grid-cols-2">
