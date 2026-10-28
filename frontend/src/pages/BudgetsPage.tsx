@@ -48,9 +48,14 @@ export function BudgetsPage() {
       <PageHeader
         title="Orçamentos"
         description={
-          budgets.length > 0
-            ? `${formatCurrency(spent)} gastos de ${formatCurrency(planned)} planejados`
-            : 'Defina limites de gastos por categoria.'
+          budgets.length > 0 ? (
+            <>
+              <span className="money">{formatCurrency(spent)}</span> gastos de{' '}
+              <span className="money">{formatCurrency(planned)}</span> planejados
+            </>
+          ) : (
+            'Defina limites de gastos por categoria.'
+          )
         }
         actions={
           <>

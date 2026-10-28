@@ -17,9 +17,7 @@ export function CurrencyTooltip({ labels, ...props }: CurrencyTooltipProps) {
             style={{ backgroundColor: item.payload?.fill ?? item.color }}
           />
           <span className="flex-1 text-muted-foreground">{labels?.[String(name)] ?? name}</span>
-          <span className="font-medium text-foreground tabular-nums">
-            {formatCurrency(Number(value))}
-          </span>
+          <span className="money font-medium text-foreground">{formatCurrency(Number(value))}</span>
         </div>
       )}
     />

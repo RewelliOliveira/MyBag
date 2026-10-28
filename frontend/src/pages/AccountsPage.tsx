@@ -47,9 +47,14 @@ export function AccountsPage() {
       <PageHeader
         title="Contas"
         description={
-          accounts.length > 0
-            ? `${formatCurrency(total)} somando ${accounts.length} ${accounts.length === 1 ? 'conta' : 'contas'}`
-            : 'Onde seu dinheiro está guardado.'
+          accounts.length > 0 ? (
+            <>
+              <span className="money">{formatCurrency(total)}</span> somando {accounts.length}{' '}
+              {accounts.length === 1 ? 'conta' : 'contas'}
+            </>
+          ) : (
+            'Onde seu dinheiro está guardado.'
+          )
         }
         actions={
           <>

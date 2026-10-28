@@ -25,7 +25,13 @@ export function CategoryBreakdownChart({ type, period }: CategoryBreakdownChartP
   return (
     <ChartCard
       title={`${transactionTypePluralLabels[type]} por categoria`}
-      description={data.length > 0 ? `${formatCurrency(total)} no mês` : undefined}
+      description={
+        data.length > 0 ? (
+          <>
+            <span className="money">{formatCurrency(total)}</span> no mês
+          </>
+        ) : undefined
+      }
       isPending={isPending}
       isError={isError}
       onRetry={refetch}

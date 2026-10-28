@@ -53,9 +53,20 @@ export function BudgetAlertsPanel({ period, className }: BudgetAlertsPanelProps)
                 <div className="min-w-0 flex-1 text-sm">
                   <p className="font-medium">{budget.categoriaDTO.nome}</p>
                   <p className="text-muted-foreground">
-                    {exceeded
-                      ? `Passou ${formatCurrency(Math.abs(budget.valorRestante))} do limite`
-                      : `${formatPercent(budget.progresso)} usado, restam ${formatCurrency(budget.valorRestante)}`}
+                    {exceeded ? (
+                      <>
+                        Passou{' '}
+                        <span className="money">
+                          {formatCurrency(Math.abs(budget.valorRestante))}
+                        </span>{' '}
+                        do limite
+                      </>
+                    ) : (
+                      <>
+                        {formatPercent(budget.progresso)} usado, restam{' '}
+                        <span className="money">{formatCurrency(budget.valorRestante)}</span>
+                      </>
+                    )}
                   </p>
                 </div>
               </li>

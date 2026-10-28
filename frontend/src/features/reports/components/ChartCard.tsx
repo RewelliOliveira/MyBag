@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 interface ChartCardProps {
   title: string
-  description?: string
+  description?: ReactNode
   actions?: ReactNode
   isPending: boolean
   isError: boolean

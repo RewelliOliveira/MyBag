@@ -79,9 +79,16 @@ export function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps) {
         )}
       >
         <span>
-          {exceeded
-            ? `${formatCurrency(Math.abs(budget.valorRestante))} acima do limite`
-            : `Restam ${formatCurrency(budget.valorRestante)}`}
+          {exceeded ? (
+            <>
+              <span className="money">{formatCurrency(Math.abs(budget.valorRestante))}</span> acima
+              do limite
+            </>
+          ) : (
+            <>
+              Restam <span className="money">{formatCurrency(budget.valorRestante)}</span>
+            </>
+          )}
         </span>
         <span className="tabular-nums">{formatPercent(budget.progresso)}</span>
       </p>
