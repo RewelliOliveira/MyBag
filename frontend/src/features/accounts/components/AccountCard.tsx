@@ -1,4 +1,4 @@
-import { EllipsisVertical, Pencil, Trash2 } from 'lucide-react'
+import { Archive, EllipsisVertical, Pencil } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,10 +16,10 @@ import type { Account } from '@/types/models'
 interface AccountCardProps {
   account: Account
   onEdit: (account: Account) => void
-  onDelete: (account: Account) => void
+  onArchive: (account: Account) => void
 }
 
-export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
+export function AccountCard({ account, onEdit, onArchive }: AccountCardProps) {
   return (
     <article className="flex flex-col gap-6 rounded-2xl border bg-card p-5 transition-shadow hover:shadow-md">
       <div className="flex items-start gap-3">
@@ -43,9 +43,9 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
               <Pencil />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={() => onDelete(account)}>
-              <Trash2 />
-              Excluir
+            <DropdownMenuItem onSelect={() => onArchive(account)}>
+              <Archive />
+              Arquivar
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

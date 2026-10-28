@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AccountCard } from '@/features/accounts/components/AccountCard'
 import { AccountFormDialog } from '@/features/accounts/components/AccountFormDialog'
-import { useAccounts, useDeleteAccount } from '@/features/accounts/hooks/use-accounts'
+import { ArchivedAccounts } from '@/features/accounts/components/ArchivedAccounts'
+import { useAccounts, useArchiveAccount } from '@/features/accounts/hooks/use-accounts'
 import { usePeriod } from '@/hooks/use-period'
 import { formatCurrency } from '@/lib/format'
 import type { Account } from '@/types/models'
@@ -18,12 +19,12 @@ import type { Account } from '@/types/models'
 export function AccountsPage() {
   const [period] = usePeriod()
   const { data: accounts = [], isPending, isError, refetch } = useAccounts(period)
-  const deleteAccount = useDeleteAccount()
+  const archiveAccount = useArchiveAccount()
   const reduceMotion = useReducedMotion()
 
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Account>()
-  const [deleting, setDeleting] = useState<Account>()
+  const [archiving, setArchiving] = useState<Account>()
 
   const total = accounts.reduce((sum, account) => sum + account.saldo, 0)
 
@@ -37,9 +38,9 @@ export function AccountsPage() {
     setFormOpen(true)
   }
 
-  const confirmDelete = () => {
-    if (!deleting) return
-    deleteAccount.mutate(deleting.id, { onSuccess: () => setDeleting(undefined) })
+  const confirmArchive = () => {
+    if (!archiving) return
+    archiveAccount.mutate(archiving.id, { onSuccess: () => setArchiving(undefined) })
   }
 
   return (
@@ -96,7 +97,7 @@ export function AccountsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
             >
-              <AccountCard account={account} onEdit={openEdit} onDelete={setDeleting} />
+              <AccountCard account={account} onEdit={openEdit} onArchive={setArchiving} />
             </motion.div>
           ))}
         </div>
@@ -104,19 +105,23 @@ export function AccountsPage() {
 
       <AccountFormDialog open={formOpen} onOpenChange={setFormOpen} account={editing} />
 
+      <ArchivedAccounts />
+
       <ConfirmDialog
-        open={!!deleting}
-        onOpenChange={(open) => !open && setDeleting(undefined)}
-        title="Excluir conta?"
+        open={!!archiving}
+        onOpenChange={(open) => !open && setArchiving(undefined)}
+        title="Arquivar conta?"
         description={
           <>
-            A conta <strong>{deleting?.descricao}</strong> e as transações ligadas a ela serão
-            removidas. Essa ação não pode ser desfeita.
+            <strong>{archiving?.descricao}</strong> sai da lista e do saldo total, mas as transações
+            continuam nos relatórios. Lançamentos fixos ligados a ela são encerrados. Você pode
+            reativá-la quando quiser.
           </>
         }
-        confirmLabel="Excluir conta"
-        onConfirm={confirmDelete}
-        isPending={deleteAccount.isPending}
+        confirmLabel="Arquivar conta"
+        confirmVariant="default"
+        onConfirm={confirmArchive}
+        isPending={archiveAccount.isPending}
       />
     </>
   )

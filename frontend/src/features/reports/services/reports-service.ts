@@ -97,7 +97,9 @@ export function getBalanceHistory(range: PeriodRange) {
     syncUntil(db, periodEnd(range.end))
     return monthsInRange(range).map((period): BalancePoint => {
       const date = periodEnd(period)
-      const saldo = db.accounts.reduce((sum, account) => sum + balanceAt(db, account, date), 0)
+      const saldo = db.accounts
+        .filter(({ arquivada }) => !arquivada)
+        .reduce((sum, account) => sum + balanceAt(db, account, date), 0)
       return { ano: period.year, mes: period.month, saldo: roundMoney(saldo) }
     })
   })

@@ -3,9 +3,11 @@ import {
   createAccount,
   deleteAccount,
   getAccounts,
+  getArchivedAccounts,
   getAccountTypes,
   getBanks,
   getTotalBalance,
+  setAccountArchived,
   updateAccount,
   type AccountPayload,
   type AccountUpdatePayload,
@@ -18,6 +20,13 @@ export function useAccounts(period: Period) {
   return useQuery({
     queryKey: ['accounts', period],
     queryFn: () => getAccounts(period),
+  })
+}
+
+export function useArchivedAccounts() {
+  return useQuery({
+    queryKey: ['accounts', 'archived'],
+    queryFn: getArchivedAccounts,
   })
 }
 
@@ -71,6 +80,26 @@ export function useDeleteAccount() {
     meta: {
       successMessage: 'Conta excluída.',
       errorMessage: 'Não foi possível excluir a conta.',
+    },
+  })
+}
+
+export function useArchiveAccount() {
+  return useMutation({
+    mutationFn: (id: number) => setAccountArchived(id, true),
+    meta: {
+      successMessage: 'Conta arquivada.',
+      errorMessage: 'Não foi possível arquivar a conta.',
+    },
+  })
+}
+
+export function useRestoreAccount() {
+  return useMutation({
+    mutationFn: (id: number) => setAccountArchived(id, false),
+    meta: {
+      successMessage: 'Conta reativada.',
+      errorMessage: 'Não foi possível reativar a conta.',
     },
   })
 }

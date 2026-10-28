@@ -55,6 +55,7 @@ export function toAccount(db: MockDatabase, account: MockAccount, date: Date): A
     saldo: balanceAt(db, account, date),
     banco,
     tipo_conta: tipoConta,
+    arquivada: account.arquivada,
   }
 }
 

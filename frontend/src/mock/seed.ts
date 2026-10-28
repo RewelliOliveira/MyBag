@@ -81,9 +81,30 @@ const categories = [
 ]
 
 const accounts = [
-  { id: 1, descricao: 'Conta principal', saldoInicial: 3200, bancoId: 3, tipoContaId: 1 },
-  { id: 2, descricao: 'Reserva de emergência', saldoInicial: 12000, bancoId: 1, tipoContaId: 3 },
-  { id: 3, descricao: 'Conta salário', saldoInicial: 850, bancoId: 2, tipoContaId: 1 },
+  {
+    id: 1,
+    descricao: 'Conta principal',
+    saldoInicial: 3200,
+    bancoId: 3,
+    tipoContaId: 1,
+    arquivada: false,
+  },
+  {
+    id: 2,
+    descricao: 'Reserva de emergência',
+    saldoInicial: 12000,
+    bancoId: 1,
+    tipoContaId: 3,
+    arquivada: false,
+  },
+  {
+    id: 3,
+    descricao: 'Conta salário',
+    saldoInicial: 850,
+    bancoId: 2,
+    tipoContaId: 1,
+    arquivada: false,
+  },
 ]
 
 interface VariableExpense {

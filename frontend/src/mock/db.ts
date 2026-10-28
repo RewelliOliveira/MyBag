@@ -22,6 +22,7 @@ export interface MockAccount {
   saldoInicial: number
   bancoId: number
   tipoContaId: number
+  arquivada: boolean
 }
 
 export interface MockTransaction {

@@ -28,6 +28,7 @@ export interface Account {
   saldo: number
   banco: Bank
   tipo_conta: AccountType
+  arquivada: boolean
 }
 
 export interface Category {

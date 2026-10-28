@@ -85,7 +85,7 @@ export function AccountFormDialog({ open, onOpenChange, account }: AccountFormDi
           <DialogTitle>{isEditing ? 'Editar conta' : 'Nova conta'}</DialogTitle>
           <DialogDescription>
             {isEditing
-              ? 'Altere os dados da conta. Mudanças no saldo geram uma transação de ajuste.'
+              ? 'Se o saldo não bater com o do banco, informe o valor correto e a data: a conta é ajustada.'
               : 'Cadastre uma conta bancária, carteira ou investimento.'}
           </DialogDescription>
         </DialogHeader>

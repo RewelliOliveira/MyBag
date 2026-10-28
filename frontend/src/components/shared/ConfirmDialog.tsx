@@ -17,6 +17,7 @@ interface ConfirmDialogProps {
   title: string
   description: ReactNode
   confirmLabel: string
+  confirmVariant?: 'destructive' | 'default'
   onConfirm: () => void
   isPending?: boolean
   children?: ReactNode
@@ -28,6 +29,7 @@ export function ConfirmDialog({
   title,
   description,
   confirmLabel,
+  confirmVariant = 'destructive',
   onConfirm,
   isPending,
   children,
@@ -42,7 +44,7 @@ export function ConfirmDialog({
         {children}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
-          <Button variant="destructive" onClick={onConfirm} disabled={isPending}>
+          <Button variant={confirmVariant} onClick={onConfirm} disabled={isPending}>
             {isPending && <Loader2 className="animate-spin" />}
             {confirmLabel}
           </Button>
