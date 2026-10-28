@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react'
 import { Input } from '@/components/ui/input'
 import { formatCurrency } from '@/lib/format'
+import { cn } from '@/lib/utils'
 
 interface CurrencyInputProps extends Omit<ComponentProps<typeof Input>, 'value' | 'onChange'> {
   value: number | undefined
@@ -8,7 +9,13 @@ interface CurrencyInputProps extends Omit<ComponentProps<typeof Input>, 'value' 
   allowNegative?: boolean
 }
 
-export function CurrencyInput({ value, onChange, allowNegative, ...props }: CurrencyInputProps) {
+export function CurrencyInput({
+  value,
+  onChange,
+  allowNegative,
+  className,
+  ...props
+}: CurrencyInputProps) {
   const handleChange = (raw: string) => {
     const digits = raw.replace(/\D/g, '')
     const negative = allowNegative && raw.includes('-')
@@ -20,7 +27,7 @@ export function CurrencyInput({ value, onChange, allowNegative, ...props }: Curr
     <Input
       inputMode="numeric"
       autoComplete="off"
-      className="text-right money"
+      className={cn('text-right money', className)}
       value={formatCurrency(value ?? 0)}
       onChange={(event) => handleChange(event.target.value)}
       {...props}
