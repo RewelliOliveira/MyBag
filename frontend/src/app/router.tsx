@@ -1,41 +1,65 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { PageLoader } from '@/components/shared/PageLoader'
 import { ProtectedRoute, PublicOnlyRoute } from '@/features/auth/components/RouteGuards'
-import { AccountsPage } from '@/pages/AccountsPage'
-import { BudgetsPage } from '@/pages/BudgetsPage'
-import { CategoriesPage } from '@/pages/CategoriesPage'
-import { DashboardPage } from '@/pages/DashboardPage'
-import { LoginPage } from '@/pages/LoginPage'
-import { NotFoundPage } from '@/pages/NotFoundPage'
-import { ProfilePage } from '@/pages/ProfilePage'
-import { ReportsPage } from '@/pages/ReportsPage'
-import { SignupPage } from '@/pages/SignupPage'
-import { TransactionsPage } from '@/pages/TransactionsPage'
+import { RouteErrorPage } from '@/pages/RouteErrorPage'
+
+function lazyPage<T extends Record<string, unknown>>(load: () => Promise<T>, name: keyof T) {
+  return async () => ({ Component: (await load())[name] as ComponentType })
+}
 
 export const router = createBrowserRouter([
   {
-    element: <PublicOnlyRoute />,
-    children: [
-      { path: '/login', element: <LoginPage /> },
-      { path: '/cadastro', element: <SignupPage /> },
-    ],
-  },
-  {
-    element: <ProtectedRoute />,
+    errorElement: <RouteErrorPage />,
+    hydrateFallbackElement: <PageLoader />,
     children: [
       {
-        element: <AppLayout />,
+        element: <PublicOnlyRoute />,
         children: [
-          { index: true, element: <DashboardPage /> },
-          { path: 'contas', element: <AccountsPage /> },
-          { path: 'transacoes', element: <TransactionsPage /> },
-          { path: 'orcamentos', element: <BudgetsPage /> },
-          { path: 'categorias', element: <CategoriesPage /> },
-          { path: 'relatorios', element: <ReportsPage /> },
-          { path: 'perfil', element: <ProfilePage /> },
+          { path: '/login', lazy: lazyPage(() => import('@/pages/LoginPage'), 'LoginPage') },
+          { path: '/cadastro', lazy: lazyPage(() => import('@/pages/SignupPage'), 'SignupPage') },
         ],
       },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            element: <AppLayout />,
+            children: [
+              {
+                index: true,
+                lazy: lazyPage(() => import('@/pages/DashboardPage'), 'DashboardPage'),
+              },
+              {
+                path: 'contas',
+                lazy: lazyPage(() => import('@/pages/AccountsPage'), 'AccountsPage'),
+              },
+              {
+                path: 'transacoes',
+                lazy: lazyPage(() => import('@/pages/TransactionsPage'), 'TransactionsPage'),
+              },
+              {
+                path: 'orcamentos',
+                lazy: lazyPage(() => import('@/pages/BudgetsPage'), 'BudgetsPage'),
+              },
+              {
+                path: 'categorias',
+                lazy: lazyPage(() => import('@/pages/CategoriesPage'), 'CategoriesPage'),
+              },
+              {
+                path: 'relatorios',
+                lazy: lazyPage(() => import('@/pages/ReportsPage'), 'ReportsPage'),
+              },
+              {
+                path: 'perfil',
+                lazy: lazyPage(() => import('@/pages/ProfilePage'), 'ProfilePage'),
+              },
+            ],
+          },
+        ],
+      },
+      { path: '*', lazy: lazyPage(() => import('@/pages/NotFoundPage'), 'NotFoundPage') },
     ],
   },
-  { path: '*', element: <NotFoundPage /> },
 ])
