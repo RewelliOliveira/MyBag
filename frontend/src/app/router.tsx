@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router'
+import { AppLayout } from '@/components/layout/AppLayout'
 import { ProtectedRoute, PublicOnlyRoute } from '@/features/auth/components/RouteGuards'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoginPage } from '@/pages/LoginPage'
@@ -15,7 +16,12 @@ export const router = createBrowserRouter([
   },
   {
     element: <ProtectedRoute />,
-    children: [{ index: true, element: <DashboardPage /> }],
+    children: [
+      {
+        element: <AppLayout />,
+        children: [{ index: true, element: <DashboardPage /> }],
+      },
+    ],
   },
   { path: '*', element: <NotFoundPage /> },
 ])

@@ -43,3 +43,10 @@ export function formatShortMonth(month: number, year: number) {
 export function normalizeHexColor(color: string) {
   return color.startsWith('#') ? color : `#${color}`
 }
+
+export function getInitials(name: string | undefined) {
+  const parts = name?.trim().split(/\s+/).filter(Boolean) ?? []
+  const first = parts.at(0)?.[0] ?? ''
+  const last = parts.length > 1 ? (parts.at(-1)?.[0] ?? '') : ''
+  return (first + last).toUpperCase()
+}
