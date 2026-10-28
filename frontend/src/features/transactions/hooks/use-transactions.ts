@@ -1,9 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   createTransaction,
   deleteTransaction,
   getTransactions,
   getTransactionTotal,
+  restoreTransactions,
   updateTransaction,
   type RecurringDeleteScope,
   type TransactionPayload,
@@ -46,6 +48,14 @@ export function useUpdateTransaction() {
 }
 
 export function useDeleteTransaction() {
+  const restore = useMutation({
+    mutationFn: restoreTransactions,
+    meta: {
+      successMessage: 'Transação restaurada.',
+      errorMessage: 'Não foi possível restaurar a transação.',
+    },
+  })
+
   return useMutation({
     mutationFn: ({
       transaction,
@@ -54,8 +64,16 @@ export function useDeleteTransaction() {
       transaction: Transaction
       scope: RecurringDeleteScope
     }) => deleteTransaction(transaction, scope),
+    onSuccess: (removed, { transaction }) => {
+      if (removed.length === 0) {
+        toast.success('Transações excluídas.')
+        return
+      }
+      toast.success(`"${transaction.descricao}" excluída.`, {
+        action: { label: 'Desfazer', onClick: () => restore.mutate(removed) },
+      })
+    },
     meta: {
-      successMessage: 'Transação excluída.',
       errorMessage: 'Não foi possível excluir a transação.',
     },
   })

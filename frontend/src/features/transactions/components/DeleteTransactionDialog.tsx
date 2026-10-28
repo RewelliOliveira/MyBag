@@ -20,7 +20,6 @@ interface DeleteTransactionDialogProps {
 export function DeleteTransactionDialog({ transaction, onClose }: DeleteTransactionDialogProps) {
   const [scope, setScope] = useState<RecurringDeleteScope>('single')
   const deleteTransaction = useDeleteTransaction()
-  const isRecurring = !!transaction?.idTransacaoRecorrente
 
   const handleOpenChange = (open: boolean) => {
     if (open) return
@@ -30,50 +29,39 @@ export function DeleteTransactionDialog({ transaction, onClose }: DeleteTransact
 
   const confirm = () => {
     if (!transaction) return
-    deleteTransaction.mutate(
-      { transaction, scope: isRecurring ? scope : 'single' },
-      { onSuccess: () => handleOpenChange(false) },
-    )
+    deleteTransaction.mutate({ transaction, scope }, { onSuccess: () => handleOpenChange(false) })
   }
 
   return (
     <ConfirmDialog
       open={!!transaction}
       onOpenChange={handleOpenChange}
-      title="Excluir transação?"
+      title="Excluir transação recorrente?"
       description={
-        isRecurring ? (
-          <>
-            <strong>{transaction?.descricao}</strong> se repete. Escolha o que excluir.
-          </>
-        ) : (
-          <>
-            <strong>{transaction?.descricao}</strong> será removida e o saldo da conta, recalculado.
-          </>
-        )
+        <>
+          <strong>{transaction?.descricao}</strong> se repete. Escolha o que excluir.
+        </>
       }
       confirmLabel="Excluir"
       onConfirm={confirm}
       isPending={deleteTransaction.isPending}
     >
-      {isRecurring && (
-        <RadioGroup
-          value={scope}
-          onValueChange={(value) => setScope(value as RecurringDeleteScope)}
-          className="gap-3"
-        >
-          {scopeOptions.map((option) => (
-            <Label
-              key={option.value}
-              htmlFor={`scope-${option.value}`}
-              className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 font-normal has-data-[state=checked]:border-primary has-data-[state=checked]:bg-accent"
-            >
-              <RadioGroupItem id={`scope-${option.value}`} value={option.value} />
-              {option.label}
-            </Label>
-          ))}
-        </RadioGroup>
-      )}
+      <RadioGroup
+        value={scope}
+        onValueChange={(value) => setScope(value as RecurringDeleteScope)}
+        className="gap-3"
+      >
+        {scopeOptions.map((option) => (
+          <Label
+            key={option.value}
+            htmlFor={`scope-${option.value}`}
+            className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 font-normal has-data-[state=checked]:border-primary has-data-[state=checked]:bg-accent"
+          >
+            <RadioGroupItem id={`scope-${option.value}`} value={option.value} />
+            {option.label}
+          </Label>
+        ))}
+      </RadioGroup>
     </ConfirmDialog>
   )
 }

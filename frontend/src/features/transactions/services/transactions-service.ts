@@ -1,6 +1,6 @@
 import { endOfMonth, subDays } from 'date-fns'
 import { toApiDate } from '@/lib/format'
-import { nextId } from '@/mock/db'
+import { nextId, type MockTransaction } from '@/mock/db'
 import { advanceDate, firstOccurrence } from '@/mock/recurrence'
 import { mockRequest, notFound } from '@/mock/request'
 import {
@@ -127,12 +127,13 @@ export function updateTransaction(id: number, payload: TransactionPayload) {
 }
 
 export function deleteTransaction(transaction: Transaction, scope: RecurringDeleteScope) {
-  return mockRequest((db) => {
+  return mockRequest((db): MockTransaction[] => {
     const recurringId = transaction.idTransacaoRecorrente
 
     if (scope === 'single' || !recurringId) {
+      const removed = db.transactions.filter(({ id }) => id === transaction.id)
       db.transactions = db.transactions.filter(({ id }) => id !== transaction.id)
-      return
+      return removed
     }
 
     if (scope === 'upcoming') {
@@ -145,10 +146,17 @@ export function deleteTransaction(transaction: Transaction, scope: RecurringDele
         ({ recorrenciaId, data }) =>
           recorrenciaId !== recurringId || data < transaction.data_transacao,
       )
-      return
+      return []
     }
 
     db.recurrences = db.recurrences.filter(({ id }) => id !== recurringId)
     db.transactions = db.transactions.filter(({ recorrenciaId }) => recorrenciaId !== recurringId)
+    return []
+  })
+}
+
+export function restoreTransactions(transactions: MockTransaction[]) {
+  return mockRequest((db) => {
+    db.transactions.push(...transactions)
   })
 }

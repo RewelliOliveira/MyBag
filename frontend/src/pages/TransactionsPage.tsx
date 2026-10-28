@@ -12,7 +12,10 @@ import { DeleteTransactionDialog } from '@/features/transactions/components/Dele
 import { MonthSummary } from '@/features/transactions/components/MonthSummary'
 import { TransactionFormDialog } from '@/features/transactions/components/TransactionFormDialog'
 import { TransactionList } from '@/features/transactions/components/TransactionList'
-import { useTransactions } from '@/features/transactions/hooks/use-transactions'
+import {
+  useDeleteTransaction,
+  useTransactions,
+} from '@/features/transactions/hooks/use-transactions'
 import { usePeriod } from '@/hooks/use-period'
 import type { Transaction, TransactionType } from '@/types/models'
 
@@ -36,6 +39,7 @@ export function TransactionsPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Transaction>()
   const [deleting, setDeleting] = useState<Transaction>()
+  const deleteTransaction = useDeleteTransaction()
 
   const filtered = transactions.filter(
     (transaction) =>
@@ -46,6 +50,11 @@ export function TransactionsPage() {
   const openCreate = () => {
     setEditing(undefined)
     setFormOpen(true)
+  }
+
+  const requestDelete = (transaction: Transaction) => {
+    if (transaction.idTransacaoRecorrente) setDeleting(transaction)
+    else deleteTransaction.mutate({ transaction, scope: 'single' })
   }
 
   const openEdit = (transaction: Transaction) => {
@@ -120,7 +129,7 @@ export function TransactionsPage() {
           description="Nenhuma transação corresponde aos filtros. Tente outro termo ou tipo."
         />
       ) : (
-        <TransactionList transactions={filtered} onEdit={openEdit} onDelete={setDeleting} />
+        <TransactionList transactions={filtered} onEdit={openEdit} onDelete={requestDelete} />
       )}
 
       <TransactionFormDialog open={formOpen} onOpenChange={setFormOpen} transaction={editing} />
