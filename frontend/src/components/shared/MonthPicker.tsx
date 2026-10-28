@@ -48,7 +48,7 @@ export function MonthPicker() {
 
       <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" className="min-w-36 capitalize">
+          <Button variant="ghost" size="sm" className="min-w-36">
             {formatMonthYear(period.month, period.year)}
           </Button>
         </PopoverTrigger>

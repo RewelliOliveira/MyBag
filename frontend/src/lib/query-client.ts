@@ -11,7 +11,7 @@ declare module '@tanstack/react-query' {
   }
 }
 
-export const queryClient = new QueryClient({
+export const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
@@ -20,9 +20,10 @@ export const queryClient = new QueryClient({
     },
   },
   mutationCache: new MutationCache({
-    onSuccess: (_data, _variables, _context, mutation) => {
+    onSuccess: async (_data, _variables, _context, mutation) => {
       const message = mutation.meta?.successMessage
       if (message) toast.success(message)
+      await queryClient.invalidateQueries()
     },
     onError: (error, _variables, _context, mutation) => {
       toast.error(getErrorMessage(error, mutation.meta?.errorMessage))

@@ -32,8 +32,12 @@ export function formatDate(value: string | Date, pattern = 'dd/MM/yyyy') {
   return format(date, pattern, { locale: ptBR })
 }
 
+export function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
 export function formatMonthYear(month: number, year: number) {
-  return format(new Date(year, month - 1, 1), "MMMM 'de' yyyy", { locale: ptBR })
+  return capitalize(format(new Date(year, month - 1, 1), "MMMM 'de' yyyy", { locale: ptBR }))
 }
 
 export function formatShortMonth(month: number, year: number) {
