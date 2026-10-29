@@ -9,7 +9,7 @@ import { MonthPicker } from '@/components/shared/MonthPicker'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { BudgetCard } from '@/features/budgets/components/BudgetCard'
-import { BudgetFormDialog } from '@/features/budgets/components/BudgetFormDialog'
+import { BudgetFormSheet } from '@/features/budgets/components/BudgetFormSheet'
 import { useBudgets, useDeleteBudget } from '@/features/budgets/hooks/use-budgets'
 import { usePeriod } from '@/hooks/use-period'
 import { formatCurrency } from '@/lib/format'
@@ -103,7 +103,7 @@ export function BudgetsPage() {
         </div>
       )}
 
-      <BudgetFormDialog
+      <BudgetFormSheet
         open={formOpen}
         onOpenChange={setFormOpen}
         period={period}

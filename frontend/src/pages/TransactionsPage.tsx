@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DeleteTransactionDialog } from '@/features/transactions/components/DeleteTransactionDialog'
 import { MonthSummary } from '@/features/transactions/components/MonthSummary'
-import { TransactionFormDialog } from '@/features/transactions/components/TransactionFormDialog'
+import { TransactionFormSheet } from '@/features/transactions/components/TransactionFormSheet'
 import { TransactionList } from '@/features/transactions/components/TransactionList'
 import {
   useDeleteTransaction,
@@ -80,9 +80,9 @@ export function TransactionsPage() {
 
       <MonthSummary period={period} />
 
-      <div className="mt-8 mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-6 mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mt-8">
         <Tabs value={typeFilter} onValueChange={(value) => setTypeFilter(value as TypeFilter)}>
-          <TabsList>
+          <TabsList className="w-full sm:w-fit">
             <TabsTrigger value="ALL">Todas</TabsTrigger>
             <TabsTrigger value="RECEITA">Receitas</TabsTrigger>
             <TabsTrigger value="DESPESA">Despesas</TabsTrigger>
@@ -132,7 +132,7 @@ export function TransactionsPage() {
         <TransactionList transactions={filtered} onEdit={openEdit} onDelete={requestDelete} />
       )}
 
-      <TransactionFormDialog open={formOpen} onOpenChange={setFormOpen} transaction={editing} />
+      <TransactionFormSheet open={formOpen} onOpenChange={setFormOpen} transaction={editing} />
       <DeleteTransactionDialog transaction={deleting} onClose={() => setDeleting(undefined)} />
     </>
   )

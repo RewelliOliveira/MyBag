@@ -33,16 +33,16 @@ export function BalanceHero({ period, onCreate }: BalanceHeroProps) {
   const monthName = formatMonthName(period.month, period.year)
 
   return (
-    <section className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+    <section className="flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div className="max-w-3xl">
         <p className="text-muted-foreground">
           {greeting()}
           {firstName && `, ${firstName}`}.
         </p>
-        <h1 className="mt-2 text-3xl leading-tight font-semibold md:text-5xl">
+        <h1 className="mt-2 text-2xl leading-tight font-semibold sm:text-3xl md:text-5xl">
           Você tem{' '}
           {balance === undefined ? (
-            <Skeleton className="inline-block h-10 w-64 align-middle md:h-12" />
+            <Skeleton className="inline-block h-8 w-48 align-middle sm:h-10 sm:w-64 md:h-12" />
           ) : (
             <AnimatedNumber
               value={balance}
@@ -52,7 +52,7 @@ export function BalanceHero({ period, onCreate }: BalanceHeroProps) {
           )}{' '}
           em {accountCount} {accountCount === 1 ? 'conta' : 'contas'}.
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <p className="mt-4 text-muted-foreground sm:text-lg">
           Em {monthName} entraram{' '}
           <span className="money font-semibold text-income">{formatCurrency(income)}</span> e saíram{' '}
           <span className="money font-semibold text-expense">{formatCurrency(expenses)}</span>.
@@ -61,7 +61,7 @@ export function BalanceHero({ period, onCreate }: BalanceHeroProps) {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-end">
         <MonthPicker />
-        <div className="flex gap-2">
+        <div className="flex gap-2 *:flex-1 sm:*:flex-none">
           <Button size="lg" variant="outline" onClick={() => onCreate('RECEITA')}>
             <ArrowDownLeft className="text-income" />
             Nova receita

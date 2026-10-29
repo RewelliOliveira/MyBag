@@ -29,7 +29,7 @@ export function ChartCard({
   className,
 }: ChartCardProps) {
   return (
-    <section className={cn('min-w-0 rounded-2xl border bg-card p-5 md:p-6', className)}>
+    <section className={cn('min-w-0 rounded-2xl border bg-card p-4 sm:p-5 md:p-6', className)}>
       <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold">{title}</h2>

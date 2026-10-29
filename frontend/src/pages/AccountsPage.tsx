@@ -9,7 +9,7 @@ import { MonthPicker } from '@/components/shared/MonthPicker'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AccountCard } from '@/features/accounts/components/AccountCard'
-import { AccountFormDialog } from '@/features/accounts/components/AccountFormDialog'
+import { AccountFormSheet } from '@/features/accounts/components/AccountFormSheet'
 import { ArchivedAccounts } from '@/features/accounts/components/ArchivedAccounts'
 import { useAccounts, useArchiveAccount } from '@/features/accounts/hooks/use-accounts'
 import { usePeriod } from '@/hooks/use-period'
@@ -103,7 +103,7 @@ export function AccountsPage() {
         </div>
       )}
 
-      <AccountFormDialog open={formOpen} onOpenChange={setFormOpen} account={editing} />
+      <AccountFormSheet open={formOpen} onOpenChange={setFormOpen} account={editing} />
 
       <ArchivedAccounts />
 

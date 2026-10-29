@@ -30,9 +30,13 @@ export function TransactionRow({ transaction, onEdit, onDelete }: TransactionRow
         <p className="flex items-center gap-2 truncate font-medium">
           <span className="truncate">{transaction.descricao}</span>
           {transaction.origem !== 'NORMAL' && (
-            <Badge variant="outline" className="shrink-0 gap-1 font-normal">
+            <Badge
+              variant="outline"
+              className="shrink-0 gap-1 font-normal"
+              aria-label={originLabels[transaction.origem]}
+            >
               <Repeat />
-              {originLabels[transaction.origem]}
+              <span className="hidden sm:inline">{originLabels[transaction.origem]}</span>
             </Badge>
           )}
         </p>

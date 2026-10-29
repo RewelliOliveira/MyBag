@@ -3,15 +3,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { CurrencyInput } from '@/components/shared/CurrencyInput'
+import { FormSheet } from '@/components/shared/FormSheet'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { useCreateBudget, useUpdateBudget } from '@/features/budgets/hooks/use-budgets'
 import { budgetSchema, type BudgetFormValues } from '@/features/budgets/schemas'
@@ -20,7 +13,7 @@ import { useCategories } from '@/features/categories/hooks/use-categories'
 import { formatMonthYear } from '@/lib/format'
 import type { Budget, Period } from '@/types/models'
 
-interface BudgetFormDialogProps {
+interface BudgetFormSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   period: Period
@@ -35,13 +28,13 @@ function toFormValues(budget?: Budget): Partial<BudgetFormValues> {
   }
 }
 
-export function BudgetFormDialog({
+export function BudgetFormSheet({
   open,
   onOpenChange,
   period,
   budget,
   usedCategoryIds,
-}: BudgetFormDialogProps) {
+}: BudgetFormSheetProps) {
   const isEditing = !!budget
   const budgetPeriod = budget ? { month: budget.mes, year: budget.ano } : period
   const { data: categories = [] } = useCategories('DESPESA')
@@ -75,55 +68,13 @@ export function BudgetFormDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar orçamento' : 'Novo orçamento'}</DialogTitle>
-          <DialogDescription>
-            Limite de gastos para {formatMonthYear(budgetPeriod.month, budgetPeriod.year)}.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form id="budget-form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <FieldGroup>
-            <Field data-invalid={!!errors.categoriaId}>
-              <FieldLabel htmlFor="categoriaId">Categoria de despesa</FieldLabel>
-              <Controller
-                control={control}
-                name="categoriaId"
-                render={({ field }) => (
-                  <CategoryPicker
-                    id="categoriaId"
-                    categories={availableCategories}
-                    value={field.value}
-                    onChange={field.onChange}
-                    invalid={!!errors.categoriaId}
-                  />
-                )}
-              />
-              <FieldError errors={[errors.categoriaId]} />
-            </Field>
-
-            <Field data-invalid={!!errors.valorEstimado}>
-              <FieldLabel htmlFor="valorEstimado">Limite do mês</FieldLabel>
-              <Controller
-                control={control}
-                name="valorEstimado"
-                render={({ field }) => (
-                  <CurrencyInput
-                    id="valorEstimado"
-                    value={field.value}
-                    onChange={field.onChange}
-                    aria-invalid={!!errors.valorEstimado}
-                  />
-                )}
-              />
-              <FieldError errors={[errors.valorEstimado]} />
-            </Field>
-          </FieldGroup>
-        </form>
-
-        <DialogFooter>
+    <FormSheet
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? 'Editar orçamento' : 'Novo orçamento'}
+      description={`Limite de gastos para ${formatMonthYear(budgetPeriod.month, budgetPeriod.year)}.`}
+      footer={
+        <>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             Cancelar
           </Button>
@@ -131,8 +82,47 @@ export function BudgetFormDialog({
             {isPending && <Loader2 className="animate-spin" />}
             {isEditing ? 'Salvar alterações' : 'Criar orçamento'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </>
+      }
+    >
+      <form id="budget-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <FieldGroup>
+          <Field data-invalid={!!errors.categoriaId}>
+            <FieldLabel htmlFor="categoriaId">Categoria de despesa</FieldLabel>
+            <Controller
+              control={control}
+              name="categoriaId"
+              render={({ field }) => (
+                <CategoryPicker
+                  id="categoriaId"
+                  categories={availableCategories}
+                  value={field.value}
+                  onChange={field.onChange}
+                  invalid={!!errors.categoriaId}
+                />
+              )}
+            />
+            <FieldError errors={[errors.categoriaId]} />
+          </Field>
+
+          <Field data-invalid={!!errors.valorEstimado}>
+            <FieldLabel htmlFor="valorEstimado">Limite do mês</FieldLabel>
+            <Controller
+              control={control}
+              name="valorEstimado"
+              render={({ field }) => (
+                <CurrencyInput
+                  id="valorEstimado"
+                  value={field.value}
+                  onChange={field.onChange}
+                  aria-invalid={!!errors.valorEstimado}
+                />
+              )}
+            />
+            <FieldError errors={[errors.valorEstimado]} />
+          </Field>
+        </FieldGroup>
+      </form>
+    </FormSheet>
   )
 }

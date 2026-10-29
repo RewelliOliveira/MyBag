@@ -21,7 +21,7 @@ export function DashboardPanel({
 }: DashboardPanelProps) {
   return (
     <section className={cn('flex min-w-0 flex-col rounded-2xl border bg-card', className)}>
-      <header className="flex items-center justify-between border-b px-5 py-4">
+      <header className="flex items-center justify-between border-b px-4 py-3 sm:px-5 sm:py-4">
         <h2 className="text-lg font-semibold">{title}</h2>
         <Button asChild variant="ghost" size="sm">
           <Link to={linkTo}>
