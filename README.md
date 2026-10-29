@@ -1,73 +1,39 @@
-# React + TypeScript + Vite
+# MyBag
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web de finanças pessoais para organizar contas, registrar transações, acompanhar orçamentos mensais e visualizar relatórios de gastos.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Dashboard** com saldo total, contas, transações recentes e alertas de orçamento
+- **Contas** bancárias e carteiras, com arquivamento que preserva o histórico
+- **Transações** únicas, fixas e parceladas, agrupadas por dia e com prévia do impacto no orçamento
+- **Categorias** pré-definidas com ícones
+- **Orçamentos** mensais por categoria, com status de consumo
+- **Relatórios** com evolução do saldo, receitas x despesas, gastos por categoria, ritmo de gastos, resultado mensal e gastos por dia da semana
+- **Perfil** com foto, tema claro/escuro e modo de privacidade para ocultar valores
+- Layout responsivo, com formulários em painéis laterais adaptados para telas pequenas
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React 19, TypeScript, Vite, Tailwind CSS v4, shadcn/ui, React Router, TanStack Query, React Hook Form + Zod, Chart.js e Motion.
 
-## Expanding the ESLint configuration
+## Como rodar
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Requer Node.js 20.19+ ou 22.12+ (exigência do Vite 8).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+A aplicação abre em `http://localhost:5173`. Use o login de demonstração `demo@mybag.com` / `123456` (já preenchido na tela de login).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Ainda não há backend: os dados vêm de um banco simulado salvo no `localStorage` do navegador. Veja o [README do frontend](frontend/README.md) para detalhes sobre os dados mockados, scripts, estrutura de pastas e convenções.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estrutura do repositório
+
+```
+MyBag/
+└── frontend/   aplicação web (React + Vite)
 ```

@@ -10,7 +10,7 @@ Aplicação web de finanças pessoais: contas, transações (únicas, fixas e pa
 - TanStack Query
 - React Hook Form + Zod
 - Motion para animações
-- Recharts (via shadcn Chart)
+- Chart.js (via react-chartjs-2)
 
 ## Primeiros passos
 
@@ -28,7 +28,7 @@ npm run dev
 
 ## Dados mockados
 
-Ainda não há backend hospedado, então os serviços em `src/features/*/services` leem e gravam em um banco simulado em `src/mock`, com latência artificial. Os dados são gerados relativos à data atual (últimos 6 meses) e ficam salvos no `localStorage` (`mybag:mock-db:v1`); apague essa chave para restaurar a carga inicial.
+Ainda não há backend hospedado, então os serviços em `src/features/*/services` leem e gravam em um banco simulado em `src/mock`, com latência artificial. Os dados são gerados relativos à data atual (últimos 6 meses) e ficam salvos no `localStorage` (`mybag:mock-db:v2`); apague essa chave para restaurar a carga inicial.
 
 Login de demonstração: `demo@mybag.com` / `123456` (já preenchido na tela de login).
 
