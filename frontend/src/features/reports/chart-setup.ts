@@ -25,4 +25,4 @@ Chart.register(
 
 Chart.defaults.font.family = "'Inter Variable', ui-sans-serif, system-ui, sans-serif"
 Chart.defaults.font.size = 12
-Chart.defaults.animation = { duration: 400, easing: 'easeOutQuart' }
+Chart.defaults.set('animation', { duration: 400 })

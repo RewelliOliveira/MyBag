@@ -66,7 +66,7 @@ export function CategoryBreakdownChart({ type, period }: CategoryBreakdownChartP
       isEmpty={data.length === 0}
       emptyMessage={`Nenhuma ${type === 'RECEITA' ? 'receita' : 'despesa'} registrada no mês.`}
     >
-      <div className="grid items-center gap-6 sm:grid-cols-2">
+      <div className="grid items-center gap-6 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
         <div className="relative mx-auto aspect-square w-full max-w-56">
           <Doughnut
             data={chartData}
