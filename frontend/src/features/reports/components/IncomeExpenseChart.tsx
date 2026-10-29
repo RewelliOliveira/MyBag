@@ -1,25 +1,14 @@
 import { useState } from 'react'
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  type ChartConfig,
-} from '@/components/ui/chart'
+import type { ChartData, ChartOptions } from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+import '@/features/reports/chart-setup'
+import { cartesianScales, legendOptions, tooltipOptions } from '@/features/reports/chart-options'
 import { ChartCard } from '@/features/reports/components/ChartCard'
-import { CurrencyTooltip } from '@/features/reports/components/CurrencyTooltip'
 import { RangeToggle, type RangeMonths } from '@/features/reports/components/RangeToggle'
+import { useChartTheme } from '@/features/reports/hooks/use-chart-theme'
 import { rangeEndingAt, useIncomeExpenseHistory } from '@/features/reports/hooks/use-reports'
-import { formatCompactCurrency, formatShortMonth } from '@/lib/format'
+import { formatShortMonth } from '@/lib/format'
 import type { Period } from '@/types/models'
-
-const config = {
-  receitas: { label: 'Receitas', color: 'var(--chart-income)' },
-  despesas: { label: 'Despesas', color: 'var(--chart-expense)' },
-} satisfies ChartConfig
-
-const labels = { receitas: 'Receitas', despesas: 'Despesas' }
 
 interface IncomeExpenseChartProps {
   period: Period
@@ -33,16 +22,47 @@ export function IncomeExpenseChart({
   className,
 }: IncomeExpenseChartProps) {
   const [months, setMonths] = useState<RangeMonths>(defaultRange)
+  const theme = useChartTheme()
   const {
     data = [],
     isPending,
     isError,
     refetch,
   } = useIncomeExpenseHistory(rangeEndingAt(period, months))
-  const chartData = data.map((point) => ({
-    ...point,
-    label: formatShortMonth(point.mes, point.ano),
-  }))
+
+  const barStyle = {
+    borderRadius: 4,
+    borderSkipped: 'start' as const,
+    maxBarThickness: 28,
+    categoryPercentage: 0.7,
+    barPercentage: 0.9,
+  }
+
+  const chartData: ChartData<'bar'> = {
+    labels: data.map((point) => formatShortMonth(point.mes, point.ano)),
+    datasets: [
+      {
+        label: 'Receitas',
+        data: data.map((point) => point.receitas),
+        backgroundColor: theme.income,
+        ...barStyle,
+      },
+      {
+        label: 'Despesas',
+        data: data.map((point) => point.despesas),
+        backgroundColor: theme.expense,
+        ...barStyle,
+      },
+    ],
+  }
+
+  const options: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    scales: cartesianScales(theme),
+    plugins: { legend: legendOptions(theme), tooltip: tooltipOptions<'bar'>(theme) },
+  }
 
   return (
     <ChartCard
@@ -55,35 +75,14 @@ export function IncomeExpenseChart({
       isEmpty={data.length === 0}
       className={className}
     >
-      <ChartContainer config={config} className="aspect-auto h-72 w-full">
-        <BarChart data={chartData} barGap={2} accessibilityLayer>
-          <CartesianGrid vertical={false} />
-          <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
-          <YAxis
-            tickLine={false}
-            axisLine={false}
-            width={64}
-            tickFormatter={(value: number) => formatCompactCurrency(value)}
-          />
-          <ChartTooltip
-            cursor={{ fill: 'var(--color-muted)' }}
-            content={<CurrencyTooltip labels={labels} />}
-          />
-          <ChartLegend content={<ChartLegendContent />} />
-          <Bar
-            dataKey="receitas"
-            fill="var(--color-receitas)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={28}
-          />
-          <Bar
-            dataKey="despesas"
-            fill="var(--color-despesas)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={28}
-          />
-        </BarChart>
-      </ChartContainer>
+      <div className="relative h-64 sm:h-72">
+        <Bar
+          data={chartData}
+          options={options}
+          role="img"
+          aria-label="Gráfico de barras com receitas e despesas por mês"
+        />
+      </div>
     </ChartCard>
   )
 }

@@ -193,13 +193,11 @@
 }
 
 @layer base {
-  .money,
-  .recharts-yAxis .recharts-cartesian-axis-tick-value {
+  .money {
     transition: filter 0.2s ease;
   }
 
-  [data-hide-values] .money,
-  [data-hide-values] .recharts-yAxis .recharts-cartesian-axis-tick-value {
+  [data-hide-values] .money {
     filter: blur(0.5em);
     user-select: none;
   }
